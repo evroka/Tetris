@@ -132,6 +132,7 @@ export default class Game {
 		if (this.hasCollision()){
 			this.activePiece.y -= 1;
 			this.lockPiece();
+			this.clearLines();
 			this.updatePieces();
 		}
 	}
@@ -183,6 +184,33 @@ export default class Game {
 					this.playfield[pieceY + y][pieceX + x] = blocks[y][x];
 				}
 			}
+		}
+	}
+
+	clearLines() {
+		const rows = 20;
+		const columns = 10;
+		let lines = [];
+
+		for(let y = rows - 1; y >=0; y--) {
+			let numbersOfBlocks = 0;
+
+			for (let x = 0; x < columns; x++) {
+				if (this.playfield[y][x]) {
+					numbersOfBlocks += 1;
+				} 
+			}
+			if (numbersOfBlocks === 0) {
+				break;
+			} else if (numbersOfBlocks < columns) {
+				continue;
+			} else if (numbersOfBlocks === columns) {
+				lines.unshift(y);
+			}
+		}
+		for (let index of lines) {
+			this.playfield.splice(index, 1);
+			this.playfield.unshift(new Array(columns).fill(0));
 		}
 	}
 
